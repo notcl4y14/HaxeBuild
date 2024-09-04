@@ -3,6 +3,7 @@ package hxbuild;
 import sys.io.Process;
 import haxe.Json;
 import sys.io.File;
+import hxbuild.util.DynamicTools;
 
 class HaxeBuild {
 	
@@ -32,6 +33,7 @@ class HaxeBuild {
 	static function build(json: Dynamic, target: String = null) {
 		var name = json.name;
 		var outDir = json.outDir;
+		var outFile = json.outFile;
 		var main = json.main;
 		var target = target ?? json.target;
 
@@ -40,7 +42,7 @@ class HaxeBuild {
 				build_cpp(outDir, main);
 			
 			case "hl":
-				build_hl(outDir, main);
+				build_hl(outDir, outFile, main);
 			
 			default:
 				if (target == null) {
@@ -65,8 +67,8 @@ class HaxeBuild {
 		process.close();
 	}
 
-	static function build_hl(outDir:String, main:String) {
-		var command = "haxe -hl " + outDir + "/" + main + " -main " + main;
+	static function build_hl(outDir:String, outFile: String, main:String) {
+		var command = "haxe -hl " + outDir + "/" + (outFile ?? main) + " -main " + main;
 
 		Sys.println(command);
 
@@ -95,17 +97,11 @@ class HaxeBuild {
 				var content = File.getContent("./hxbuild.json");
 
 				var json: Dynamic = Json.parse(content);
-				var buildTarget = args[1] ?? json.DefaultTarget;
-				var jsonTarget: Dynamic = Reflect.getProperty(json, buildTarget);
+				var buildTarget = args[1] ?? json.defaultTarget;
+				var jsonTarget: Dynamic = Reflect.getProperty(json.targets, buildTarget);
 
-				var defaultTarget: Dynamic = json.Default;
-				// jsonTarget = { ...jsonTarget, ...defaultTarget };
-
-				for (n in Reflect.fields(defaultTarget)) {
-					if (!Reflect.hasField(jsonTarget, n)) {
-						Reflect.setProperty(jsonTarget, n, Reflect.getProperty(defaultTarget, n));
-					}
-				}
+				var defaultTarget: Dynamic = Reflect.getProperty(json, "default");
+				DynamicTools.combine(jsonTarget, defaultTarget);
 
 				build(jsonTarget, jsonTarget.target);
 		}

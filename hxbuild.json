@@ -1,16 +1,23 @@
 {
-	"DefaultTarget": "Hl",
-	"Default": {
+	"defaultTarget": "Hl",
+	
+	"default": {
 		"name": "Project",
 		"main": "Main"
 	},
-	"Cpp": {
-		"target": "cpp",
-		"outDir": "build/cpp"
-	},
-	"Hl": {
-		"target": "hl",
-		"outFile": "Project.hl",
-		"outDir": "build/hl"
+
+	"targets": {
+
+		"Cpp": {
+			"target": "cpp",
+			"outDir": "build/cpp"
+		},
+
+		"Hl": {
+			"target": "hl",
+			"outFile": "Project.hl",
+			"outDir": "build/hl"
+		}
+
 	}
 }
