@@ -31,18 +31,14 @@ class HaxeBuild {
 	}
 
 	static function build(json: Dynamic, target: String = null) {
-		var name = json.name;
-		var outDir = json.outDir;
-		var outFile = json.outFile;
-		var main = json.main;
 		var target = target ?? json.target;
 
 		switch (target) {
 			case "cpp":
-				build_cpp(outDir, main);
+				hxbuild.targets.Cpp.build(json);
 			
 			case "hl":
-				build_hl(outDir, outFile, main);
+				hxbuild.targets.Hl.build(json);
 			
 			default:
 				if (target == null) {
@@ -51,34 +47,6 @@ class HaxeBuild {
 					Sys.println("No such target \"" + target + "\"");
 				}
 		}
-	}
-
-	static function build_cpp(outDir: String, main: String) {
-		var command = "haxe -cpp " + outDir + " -main " + main;
-
-		Sys.println(command);
-
-		var process = new Process(command);
-
-		if (process.exitCode() != 0) {
-			Sys.println("Error running the process");
-		}
-
-		process.close();
-	}
-
-	static function build_hl(outDir:String, outFile: String, main:String) {
-		var command = "haxe -hl " + outDir + "/" + (outFile ?? main) + " -main " + main;
-
-		Sys.println(command);
-
-		var process = new Process(command);
-
-		if (process.exitCode() != 0) {
-			Sys.println("Error running the process");
-		}
-
-		process.close();
 	}
 
 	static function main(): Void {
