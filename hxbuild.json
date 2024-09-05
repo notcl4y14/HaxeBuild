@@ -6,6 +6,18 @@
 		"main": "Main"
 	},
 
+	"configs": {
+
+		"Release": {
+			"defines": [ "Release" ]
+		},
+
+		"Debug": {
+			"defines": [ "Debug" ]
+		}
+		
+	},
+
 	"targets": {
 
 		"Cpp": {
@@ -15,6 +27,7 @@
 
 		"Hl": {
 			"target": "hl",
+			"defines": [ "HashLink" ],
 			"outFile": "Project.hl",
 			"outDir": "build/hl"
 		}

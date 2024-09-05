@@ -7,7 +7,8 @@ class Hl extends Target {
 	public static function build(json: Dynamic) {
 		var out = json.outDir + "/" + (json.outFile ?? json.main);
 		var main = json.main;
-		var command = "haxe -hl " + out + " -main " + main;
+		var defines = json.defines != null ? Target.joinDefines(json.defines) : "";
+		var command = "haxe -hl " + out + " -main " + main + defines;
 		Target.runProcess(command);
 	}
 
