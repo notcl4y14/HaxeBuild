@@ -1,5 +1,6 @@
 {
 	"defaultTarget": "Hl",
+	"defaultConfig": "Debug",
 	
 	"default": {
 		"name": "Project",

@@ -68,10 +68,10 @@ class HaxeBuild {
 				var buildTarget = args[1] ?? json.defaultTarget;
 				var jsonTarget: Dynamic = Reflect.getProperty(json.targets, buildTarget);
 
-				var config: Dynamic = args[2] ?? "Release";
+				var configName: Dynamic = args[2] ?? Reflect.getProperty(json, "defaultConfig") ?? "Release";
 
 				var defaultTarget: Dynamic = Reflect.getProperty(json, "default");
-				var config: Dynamic = Reflect.getProperty(json.configs, config);
+				var config: Dynamic = Reflect.getProperty(json.configs, configName);
 
 				DynamicTools.combine(jsonTarget, defaultTarget);
 				DynamicTools.combine(jsonTarget, config);
