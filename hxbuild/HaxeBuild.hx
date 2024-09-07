@@ -39,6 +39,12 @@ class HaxeBuild {
 			
 			case "hl":
 				hxbuild.targets.Hl.build(json);
+
+			case "js":
+				hxbuild.targets.Js.build(json);
+
+			case "swf":
+				hxbuild.targets.Swf.build(json);
 			
 			default:
 				if (target == null) {
