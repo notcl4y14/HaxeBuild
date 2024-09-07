@@ -11,7 +11,7 @@ class HaxeBuild {
 		var usage = [
 			"HaxeBuild",
 			"",
-			"build --project [name] --target [target] - builds, yup",
+			"build [target] [config] - builds project with specified target and config",
 			"create [name] - creates a new hxbuild.json file"
 		];
 		
