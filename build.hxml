@@ -1,2 +1,7 @@
+--library haxe-files
+
 # -main hxbuild.HaxeBuild
+# --hl HaxeBuild/hxbuild.hl
+# --interp
+
 --run hxbuild.HaxeBuild
