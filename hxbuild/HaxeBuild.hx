@@ -69,22 +69,21 @@ class HaxeBuild {
 		}
 
 		for (itemName in include) {
-			// if (!sys.Filesystem.exists("./" + itemName)) {
-				// Sys.println("ERROR: No file/folder found \"" + itemName + "\"");
-				// continue;
-			// }
+			// Check if File/Directory exists
+			if (!sys.FileSystem.exists("./" + itemName)) {
+				Sys.println("ERROR: No file/folder found \"" + itemName + "\"");
+				continue;
+			}
 
-			// var item = sys.FileSystem.isDirectory("./" + itemName)
-				// ? hx.files.Dir.of("./" + itemName)
-				// : hx.files.File.of("./" + itemName);
+			// Get source File/Directory
+			var item: Any = sys.FileSystem.isDirectory("./" + itemName)
+				? hx.files.Dir.of("./" + itemName)
+				: hx.files.File.of("./" + itemName);
 			
-			var item = hx.files.Dir.of("./" + itemName);
-
-			item.copyTo("./" + path + "/" + itemName, [MERGE, OVERWRITE]);
-			
-			// item is hx.files.Dir
-			// 	? item.copyTo("./" + path + "/" + include, [MERGE, OVERWRITE])
-			// 	: item.copyTo("./" + path + "/" + include, [OVERWRITE]);
+			// Copy to destination File/Directory
+			item is hx.files.Dir
+				? cast (item, hx.files.Dir).copyTo("./" + path + "/" + itemName, [MERGE, OVERWRITE])
+				: cast (item, hx.files.File).copyTo("./" + path + "/" + itemName, [OVERWRITE]);
 		}
 	}
 
