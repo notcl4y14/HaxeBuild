@@ -35,16 +35,16 @@ class HaxeBuild {
 
 		switch (target) {
 			case "cpp":
-				hxbuild.targets.Cpp.build(json);
+				Target.build( json, hxbuild.targets.Cpp.flag );
 			
 			case "hl":
-				hxbuild.targets.Hl.build(json);
+				Target.build( json, hxbuild.targets.Hl.flag );
 
 			case "js":
-				hxbuild.targets.Js.build(json);
+				Target.build( json, hxbuild.targets.Js.flag );
 
 			case "swf":
-				hxbuild.targets.Swf.build(json);
+				Target.build( json, hxbuild.targets.Swf.flag );
 			
 			default:
 				if (target == null) {

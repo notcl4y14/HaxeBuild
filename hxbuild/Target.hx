@@ -5,9 +5,16 @@ import sys.io.Process;
 class Target {
 	
 	public static var name: String;
+	public static var flag: String;
 
-	public static function build(json: Dynamic) {
-		return;
+	public static function build(json: Dynamic, flag: String) {
+		var out     = json.outDir + "/" + (json.outFile ?? json.main);
+		var main    = json.main;
+		var defines = json.defines != null ? " " + Target.joinDefines(json.defines) : "";
+		var libs    = json.libs != null    ? " " + Target.joinLibs(json.libs)       : "";
+
+		var command = "haxe " + flag + " " + out + " -main " + main + defines + libs;
+		Target.runProcess(command);
 	}
 
 	public static function joinValues(values: Array<String>, prefix: String) {
