@@ -1,8 +1,8 @@
 package hxbuild;
 
 import sys.io.Process;
-import haxe.Json;
 import sys.io.File;
+import haxe.Json;
 import hxbuild.util.DynamicTools;
 
 class HaxeBuild {
@@ -52,6 +52,39 @@ class HaxeBuild {
 				} else {
 					Sys.println("No such target \"" + target + "\"");
 				}
+
+				return;
+		}
+
+		var path = json.outDir;
+		var include: Array<String> = json.include;
+
+		if (include.length == 0) {
+			return;
+		}
+
+		if (path == null) {
+			Sys.println("Cannot include a file/folder without outDir specified");
+			return;
+		}
+
+		for (itemName in include) {
+			// if (!sys.Filesystem.exists("./" + itemName)) {
+				// Sys.println("ERROR: No file/folder found \"" + itemName + "\"");
+				// continue;
+			// }
+
+			// var item = sys.FileSystem.isDirectory("./" + itemName)
+				// ? hx.files.Dir.of("./" + itemName)
+				// : hx.files.File.of("./" + itemName);
+			
+			var item = hx.files.Dir.of("./" + itemName);
+
+			item.copyTo("./" + path + "/" + itemName, [MERGE, OVERWRITE]);
+			
+			// item is hx.files.Dir
+			// 	? item.copyTo("./" + path + "/" + include, [MERGE, OVERWRITE])
+			// 	: item.copyTo("./" + path + "/" + include, [OVERWRITE]);
 		}
 	}
 

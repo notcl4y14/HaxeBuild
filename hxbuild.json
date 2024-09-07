@@ -4,7 +4,8 @@
 	
 	"default": {
 		"name": "Project",
-		"main": "Main"
+		"main": "Main",
+		"include": [ "assets" ]
 	},
 
 	"configs": {
