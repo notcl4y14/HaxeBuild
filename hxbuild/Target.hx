@@ -23,6 +23,10 @@ class Target {
 	public static function joinDefines(values: Array<String>) {
 		return joinValues(values, "-D");
 	}
+
+	public static function joinLibs(values: Array<String>) {
+		return joinValues(values, "-lib");
+	}
 	
 	public static function runProcess(string:String) {
 		Sys.println(string);

@@ -8,7 +8,8 @@ class Cpp extends Target {
 		var out = json.outDir + "/" + (json.outFile ?? json.main);
 		var main = json.main;
 		var defines = json.defines ? " " + Target.joinDefines(json.defines) : "";
-		var command = "haxe -cpp " + out + " -main " + main + defines;
+		var libs = json.libs ? " " + Target.joinLibs(json.libs) : "";
+		var command = "haxe -cpp " + out + " -main " + main + defines + libs;
 		Target.runProcess(command);
 	}
 
