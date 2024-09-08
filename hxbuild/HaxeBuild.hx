@@ -118,7 +118,9 @@ class HaxeBuild {
 					? target.outDir = target.classPath + "/" + target.outDir
 					: null;
 
-				trace(target);
+				// trace(target);
+
+				// Sys.println("Building for \"" + (args[1] ?? json.defaultTarget) + "\"...");
 
 				build(target);
 		}
