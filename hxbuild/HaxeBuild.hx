@@ -46,6 +46,21 @@ class HaxeBuild {
 			case "swf":
 				Target.build( json, hxbuild.targets.Swf.flag );
 			
+			case "lua":
+				Target.build( json, hxbuild.targets.Lua.flag );
+			
+			case "cs":
+				Target.build( json, hxbuild.targets.Cs.flag );
+			
+			case "java":
+				Target.build( json, hxbuild.targets.Java.flag );
+			
+			case "jvm":
+				Target.build( json, hxbuild.targets.Jvm.flag );
+			
+			case "python":
+				Target.build( json, hxbuild.targets.Python.flag );
+			
 			default:
 				if (target == null) {
 					Sys.println("No target specified");
