@@ -30,8 +30,8 @@ class HaxeBuild {
 		File.saveContent("./hxbuild.json", content);
 	}
 
-	static function build(json: Dynamic, target: String = null) {
-		var target = target ?? json.target;
+	static function build(json: Dynamic) {
+		var target = json.target;
 
 		switch (target) {
 			case "cpp":
@@ -103,20 +103,24 @@ class HaxeBuild {
 				var content = File.getContent("./hxbuild.json");
 
 				var json: Dynamic = Json.parse(content);
-				var buildTarget = args[1] ?? json.defaultTarget;
-				var jsonTarget: Dynamic = Reflect.getProperty(json.targets, buildTarget);
 
-				var configName: Dynamic = args[2] ?? Reflect.getProperty(json, "defaultConfig") ?? "Release";
+				var target: Dynamic = Reflect.getProperty( json.targets, args[1] ?? json.defaultTarget );
+				var config: Dynamic = Reflect.getProperty( json.configs, args[2] ?? json.defaultConfig );
 
-				var defaultTarget: Dynamic = Reflect.getProperty(json, "default");
-				var config: Dynamic = Reflect.getProperty(json.configs, configName);
+				// Since the "default" is reserved as keyword by Haxe, it's called "defaultOptions"
+				var defaultOptions: Dynamic = Reflect.getProperty( json, "default" );
 
-				DynamicTools.combine(jsonTarget, defaultTarget);
-				DynamicTools.combine(jsonTarget, config);
+				DynamicTools.combine( target, defaultOptions );
+				DynamicTools.combine( target, config );
 
-				trace(jsonTarget);
+				// Apply class-path to outDir if it's set
+				target.classPath != null
+					? target.outDir = target.classPath + "/" + target.outDir
+					: null;
 
-				build(jsonTarget, jsonTarget.target);
+				trace(target);
+
+				build(target);
 		}
 	}
 

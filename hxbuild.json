@@ -5,6 +5,7 @@
 	"default": {
 		"name": "Project",
 		"main": "Main",
+		"classPath": ".",
 		"include": [ "assets" ]
 	},
 

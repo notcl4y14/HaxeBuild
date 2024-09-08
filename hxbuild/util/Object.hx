@@ -1,6 +1,6 @@
 package hxbuild.util;
 
-class Object {
+abstract Object(String) {
 
 	public var map: Map<String, Any>;
 
