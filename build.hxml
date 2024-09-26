@@ -2,6 +2,6 @@
 
 -main hxbuild.HaxeBuild
 --hl HaxeBuild/hxbuild.hl
---interp
+# --interp
 
 # --run hxbuild.HaxeBuild

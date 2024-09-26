@@ -33,43 +33,12 @@ class HaxeBuild {
 	static function build(json: Dynamic) {
 		var target = json.target;
 
-		switch (target) {
-			case "cpp":
-				Target.build( json, hxbuild.targets.Cpp.flag );
-			
-			case "hl":
-				Target.build( json, hxbuild.targets.Hl.flag );
-
-			case "js":
-				Target.build( json, hxbuild.targets.Js.flag );
-
-			case "swf":
-				Target.build( json, hxbuild.targets.Swf.flag );
-			
-			case "lua":
-				Target.build( json, hxbuild.targets.Lua.flag );
-			
-			case "cs":
-				Target.build( json, hxbuild.targets.Cs.flag );
-			
-			case "java":
-				Target.build( json, hxbuild.targets.Java.flag );
-			
-			case "jvm":
-				Target.build( json, hxbuild.targets.Jvm.flag );
-			
-			case "python":
-				Target.build( json, hxbuild.targets.Python.flag );
-			
-			default:
-				if (target == null) {
-					Sys.println("No target specified");
-				} else {
-					Sys.println("No such target \"" + target + "\"");
-				}
-
-				return;
+		if (target == null) {
+			Sys.println("No target specified");
 		}
+
+		var flag = "-" + target;
+		Target.build(json, flag);
 
 		var path = json.outDir;
 		var include: Array<String> = json.include;
@@ -132,10 +101,6 @@ class HaxeBuild {
 				target.classPath != null
 					? target.outDir = target.classPath + "/" + target.outDir
 					: null;
-
-				// trace(target);
-
-				// Sys.println("Building for \"" + (args[1] ?? json.defaultTarget) + "\"...");
 
 				build(target);
 		}
