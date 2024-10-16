@@ -1,14 +1,15 @@
 {
 	"name": "hxbuild",
 	"url": "https://github.com/notcl4y14/HaxeBuild",
+	"license": "MIT",
 	"tags": [
 		"tools",
 		"helpers"
 	],
 	"description": "Build tool for Haxe",
-	"version": "1.0.0",
+	"version": "1.0.1",
 	"classPath": "hxbuild",
-	"releasenote": "Initial release",
+	"releasenote": "Add help|usage to commands list and args fix",
 	"contributors": [
 		"notcl4y14"
 	],

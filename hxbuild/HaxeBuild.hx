@@ -12,7 +12,12 @@ class HaxeBuild {
 	static function main(): Void {
 		var argsArr: Array<String> = Sys.args();
 
-		if (argsArr.length == 0) {
+		#if Haxelib
+		if (argsArr.length == 1)
+		#else
+		if (argsArr.length == 0)
+		#end
+		{
 			usage();
 			return;
 		}
@@ -41,10 +46,11 @@ class HaxeBuild {
 	
 	static function usage(): Void {
 		var usage = [
-			"HaxeBuild v1.0.0",
+			"HaxeBuild v1.0.1",
 			"",
 			"GitHub Repo: \033[34mhttps://github.com/notcl4y14/HaxeBuild\033[0m",
 			"",
+			"help|usage - Shows this list",
 			"build \033[90m--target [target] --config [config]\033[0m - Builds project with specified target and config",
 			"init - Creates a new hxbuild.json file",
 			"install - Installs required libraries from the hxbuild.json file",
