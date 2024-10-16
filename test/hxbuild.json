@@ -1,0 +1,37 @@
+{
+	"main": "Main",
+	"classpath": ".",
+	"include": ["assets/images", "assets/sounds"],
+	
+	"outFile": "Main",
+	"outDir": "build",
+
+	"libraries": ["haxe-files"],
+
+	"configs:Release": {
+		"defines": ["Release"],
+		"optimize": "On"
+	},
+
+	"configs:Debug": {
+		"defines": ["Debug"],
+		"optimize": "Off"
+	},
+
+	"targets:C++": {
+		"target": "cpp",
+		"outDir": "${outDir}/cpp",
+		"libraries": ["hxglfw", "hxgl"]
+	},
+
+	"targets:HashLink": {
+		"target": "hl",
+		"outDir": "${outDir}/hl",
+		"libraries": ["hlsdl"]
+	},
+
+	"targets:JavaScript": {
+		"target": "js",
+		"outDir": "${outDir}/js"
+	}
+}

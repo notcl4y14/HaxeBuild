@@ -1,58 +1,123 @@
 package hxbuild;
 
 import sys.io.Process;
-import sys.io.File;
 import haxe.Json;
-import hxbuild.util.DynamicTools;
+import sys.FileSystem;
+import sys.io.File;
 
 class HaxeBuild {
+
+	// ==== Main ==== //
+
+	static function main(): Void {
+		var argsArr: Array<String> = Sys.args();
+
+		if (argsArr.length == 0) {
+			usage();
+			return;
+		}
+
+		var argsMap: Map<String, String>
+			= ArgParser.parse(argsArr);
+		
+		var command = argsArr[0];
+
+		switch (command) {
+			case "help" | "usage":
+				usage();
+			
+			case "build":
+				build(argsMap);
+			
+			case "init":
+				init();
+			
+			case "install":
+				install(argsMap);
+		}
+	}
+
+	// ==== Commands ==== //
 	
 	static function usage(): Void {
 		var usage = [
 			"HaxeBuild",
 			"",
-			"build [target] [config] - builds project with specified target and config",
-			"create [name] - creates a new hxbuild.json file"
+			"GitHub Repo: https://github.com/notcl4y14/HaxeBuild",
+			"",
+			"build --target [target] --config [config] - Builds project with specified target and config",
+			"init - Creates a new hxbuild.json file",
+			"install - Installs required libraries from the hxbuild.json file",
+			"",
+			"build -G [output] - Specifies what to build out of the following:",
+			"\tdirect - Directly build the project (default option)",
+			"\thxml - Generates a new .hxml file with specified target and config",
+			"",
+			"install --target [target] --config [config] - Specified what config's and/or target's libraries",
+			"should be installed"
 		];
 		
 		Sys.println(usage.join("\n"));
 	}
 
-	static function create(name: String = "Project"): Void {
-		var json = {
-			"name": name,
-			"outDir": "build",
-			"main": "Main"
-		};
+	static function build(args: Map<String, String>): Void {
+		if (!FileSystem.exists("./hxbuild.json")) {
+			Sys.println("ERROR: The current directory doesn't have hxbuild.json file");
+			return;
+		}
 
-		var content = Json.stringify(json, null, "\t");
+		var hxbuildContent: String = File.getContent("./hxbuild.json");
+		var hxbuildJson: Dynamic = Json.parse(hxbuildContent);
 
-		File.saveContent("./hxbuild.json", content);
-	}
+		var buildProp: BuildProperties
+			= BuildProperties.fromJson(hxbuildJson);
+		
+		// Sys.println(BuildProperties.asString(buildProp));
 
-	static function build(json: Dynamic) {
-		var target = json.target;
+		// Joining
+		var config = args.get("--config");
+		var target = args.get("--target");
+
+		if (config == null) {
+			Sys.println("ERROR: Config not specified");
+			return;
+		}
 
 		if (target == null) {
-			Sys.println("No target specified");
-		}
-
-		var flag = "-" + target;
-		Target.build(json, flag);
-
-		var path = json.outDir;
-		var include: Array<String> = json.include;
-
-		if (include.length == 0) {
+			Sys.println("ERROR: Target not specified");
 			return;
 		}
 
-		if (path == null) {
-			Sys.println("Cannot include a file/folder without outDir specified");
+		if (!buildProp.configs.exists(config)) {
+			Sys.println("ERROR: No such config as \"" + config + "\"");
 			return;
 		}
 
-		for (itemName in include) {
+		if (!buildProp.targets.exists(target)) {
+			Sys.println("ERROR: No such target as \"" + target + "\"");
+			return;
+		}
+
+		PropertyJoiner.join(buildProp, buildProp.configs.get(config));
+		PropertyJoiner.join(buildProp, buildProp.targets.get(target));
+
+		// Sys.println(BuildProperties.asString(buildProp));
+
+		// Building
+		if (args.get("-G") == "hxml") {
+			var hxml = Builder.buildHxml(buildProp);
+			File.saveContent("./hxbuild.hxml", hxml);
+			return;
+		}
+
+		Builder.build(buildProp);
+
+		// Including
+		if (buildProp.include == null) {
+			return;
+		}
+
+		for (itemName in buildProp.include) {
 			// Check if File/Directory exists
 			if (!sys.FileSystem.exists("./" + itemName)) {
 				Sys.println("ERROR: No file/folder found \"" + itemName + "\"");
@@ -66,43 +131,101 @@ class HaxeBuild {
 			
 			// Copy to destination File/Directory
 			item is hx.files.Dir
-				? cast (item, hx.files.Dir).copyTo("./" + path + "/" + itemName, [MERGE, OVERWRITE])
-				: cast (item, hx.files.File).copyTo("./" + path + "/" + itemName, [OVERWRITE]);
+				? cast (item, hx.files.Dir).copyTo("./" + buildProp.outDir + "/" + itemName, [MERGE, OVERWRITE])
+				: cast (item, hx.files.File).copyTo("./" + buildProp.outDir + "/" + itemName, [OVERWRITE]);
 		}
 	}
 
-	static function main(): Void {
-		var args = Sys.args();
+	static function init(): Void {
+		// var json = {
+		// 	"main": "Main",
 
-		if (args.length == 0) {
-			usage();
+		// 	"outFile": "Main",
+		// 	"outDir": "build",
+		
+		// 	"configs:Release": {
+		// 		"defines": ["Release"]
+		// 	},
+		
+		// 	"configs:Debug": {
+		// 		"defines": ["Debug"]
+		// 	}
+		// };
+
+		// var jsonStr = Json.stringify(json, null, "\t");
+		var jsonStr = '{
+	"main": "Main",
+
+	"outFile": "Main",
+	"outDir": "build",
+
+	"configs:Release": {
+		"defines": ["Release"],
+		"optimize": "On"
+	},
+
+	"configs:Debug": {
+		"defines": ["Debug"],
+		"optimize": "Off"
+	}
+}';
+		Sys.println(jsonStr);
+		File.saveContent("hxbuild.json", jsonStr);
+	}
+
+	static function install(args: Map<String, String>): Void {
+		var hxbuildContent: String = File.getContent("./hxbuild.json");
+		var hxbuildJson: Dynamic = Json.parse(hxbuildContent);
+
+		var buildProp: BuildProperties
+			= BuildProperties.fromJson(hxbuildJson);
+
+		// Joining
+		var config = args.get("--config");
+		var target = args.get("--target");
+
+		if (config != null && !buildProp.configs.exists(config)) {
+			Sys.println("ERROR: No such config as \"" + config + "\"");
 			return;
 		}
 
-		switch (args[0]) {
-			case "create":
-				create(args[1]);
+		if (target != null && !buildProp.targets.exists(target)) {
+			Sys.println("ERROR: No such target as \"" + target + "\"");
+			return;
+		}
+
+		config != null ? PropertyJoiner.join(buildProp, buildProp.configs.get(config)) : null;
+		target != null ? PropertyJoiner.join(buildProp, buildProp.targets.get(target)) : null;
+
+		// Installing
+		for (library in buildProp.libraries) {
+			if (StringTools.contains(library, " ")) {
+				Sys.println("ERROR: Library \"" + library + "\" contains a space character(s)");
+				continue;
+			}
+
+			var cmd: String = "haxelib install " + library;
+			Sys.println(cmd);
 			
-			case "build":
-				var content = File.getContent("./hxbuild.json");
+			var process: Process = new Process(cmd);
+			var stdout = process.stdout;
 
-				var json: Dynamic = Json.parse(content);
+			// https://community.haxe.org/t/read-process-output-while-it-is-running/2583/6
+			while (true) {
+				try {
+					var b = stdout.readByte();
+					Sys.print(String.fromCharCode(b));
+				} catch (e) {
+					break;
+				}
+			}
 
-				var target: Dynamic = Reflect.getProperty( json.targets, args[1] ?? json.defaultTarget );
-				var config: Dynamic = Reflect.getProperty( json.configs, args[2] ?? json.defaultConfig );
-
-				// Since the "default" is reserved as keyword by Haxe, it's called "defaultOptions"
-				var defaultOptions: Dynamic = Reflect.getProperty( json, "default" );
-
-				DynamicTools.combine( target, defaultOptions );
-				DynamicTools.combine( target, config );
-
-				// Apply class-path to outDir if it's set
-				target.classPath != null
-					? target.outDir = target.classPath + "/" + target.outDir
-					: null;
-
-				build(target);
+			var exitCode: Int = process.exitCode();
+			
+			if (exitCode != 0) {
+				Sys.println("ERROR: Haxelib returned an error code: " + exitCode);
+			}
+			// process.close();
 		}
 	}
 

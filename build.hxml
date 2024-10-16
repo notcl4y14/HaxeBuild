@@ -1,7 +1,10 @@
 --library haxe-files
 
 -main hxbuild.HaxeBuild
---hl HaxeBuild/hxbuild.hl
+# --hl HaxeBuild/hxbuild.hl
+# --cpp HaxeBuild/cpp
 # --interp
 
-# --run hxbuild.HaxeBuild
+# --class-path ../
+
+--run hxbuild.HaxeBuild

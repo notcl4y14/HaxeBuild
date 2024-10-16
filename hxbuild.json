@@ -1,53 +1,20 @@
 {
-	"defaultTarget": "Hl",
-	"defaultConfig": "Debug",
-	
-	"default": {
-		"name": "Project",
-		"main": "Main",
-		"classPath": ".",
-		"include": [ "assets" ]
+	"main": "Main",
+
+	"outFile": "Main",
+	"outDir": "build",
+
+	"libraries": ["hlsdl"],
+
+	"configs:Release": {
+		"defines": ["Release"],
+		"optimize": "On",
+
+		"libraries": ["haxe-files"]
 	},
 
-	"configs": {
-
-		"Release": {
-			"defines": [ "Release" ]
-		},
-
-		"Debug": {
-			"defines": [ "Debug" ]
-		}
-		
-	},
-
-	"targets": {
-
-		"Cpp": {
-			"target": "cpp",
-			"outDir": "build/cpp"
-		},
-
-		"Hl": {
-			"target": "hl",
-			"defines": [ "HashLink" ],
-			"outFile": "Project.hl",
-			"outDir": "build/hl"
-		},
-
-		"Js": {
-			"target": "js",
-			"defines": [ "Js" ],
-			"outFile": "Project.js",
-			"outDir": "build/js"
-		},
-
-		"Swf": {
-			"target": "swf",
-			"defines": [ "Swf" ],
-			"outFile": "Project.swf",
-			"outDir": "build/swf"
-		}
-
+	"configs:Debug": {
+		"defines": ["Debug"],
+		"optimize": "Off"
 	}
 }
