@@ -7,9 +7,9 @@
 		"helpers"
 	],
 	"description": "Build tool for Haxe",
-	"version": "1.0.1",
+	"version": "1.0.2",
 	"classPath": "hxbuild",
-	"releasenote": "Add help|usage to commands list and args fix",
+	"releasenote": "Fix Haxelib using different current directory path",
 	"contributors": [
 		"notcl4y14"
 	],

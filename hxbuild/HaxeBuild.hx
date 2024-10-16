@@ -12,11 +12,12 @@ class HaxeBuild {
 	static function main(): Void {
 		var argsArr: Array<String> = Sys.args();
 
+		// https://github.com/CobaltBar/HxPKG/blob/main/hxpkg/Main.hx
 		#if Haxelib
-		if (argsArr.length == 1)
-		#else
-		if (argsArr.length == 0)
+		Sys.setCwd(argsArr.pop());
 		#end
+
+		if (argsArr.length == 0)
 		{
 			usage();
 			return;
@@ -46,7 +47,7 @@ class HaxeBuild {
 	
 	static function usage(): Void {
 		var usage = [
-			"HaxeBuild v1.0.1",
+			"HaxeBuild v1.0.2",
 			"",
 			"GitHub Repo: \033[34mhttps://github.com/notcl4y14/HaxeBuild\033[0m",
 			"",
