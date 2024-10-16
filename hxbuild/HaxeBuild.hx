@@ -41,19 +41,19 @@ class HaxeBuild {
 	
 	static function usage(): Void {
 		var usage = [
-			"HaxeBuild",
+			"HaxeBuild v1.0.0",
 			"",
-			"GitHub Repo: https://github.com/notcl4y14/HaxeBuild",
+			"GitHub Repo: \033[34mhttps://github.com/notcl4y14/HaxeBuild\033[0m",
 			"",
-			"build --target [target] --config [config] - Builds project with specified target and config",
+			"build \033[90m--target [target] --config [config]\033[0m - Builds project with specified target and config",
 			"init - Creates a new hxbuild.json file",
 			"install - Installs required libraries from the hxbuild.json file",
 			"",
-			"build -G [output] - Specifies what to build out of the following:",
+			"build \033[90m-G [output]\033[0m - Specifies what to build of the following:",
 			"\tdirect - Directly build the project (default option)",
 			"\thxml - Generates a new .hxml file with specified target and config",
 			"",
-			"install --target [target] --config [config] - Specified what config's and/or target's libraries",
+			"install \033[90m--target [target] --config [config]\033[0m - Specifies what config's and/or target's libraries",
 			"should be installed"
 		];
 		
