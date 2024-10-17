@@ -59,6 +59,7 @@ class HaxeBuild {
 			"build \033[90m-G [output]\033[0m - Specifies what to build of the following:",
 			"\tdirect - Directly build the project (default option)",
 			"\thxml - Generates a new .hxml file with specified target and config",
+			"\txml - Generates a new OpenFL Lime .xml file with specified target and config",
 			"",
 			"install \033[90m--target [target] --config [config]\033[0m - Specifies what config's and/or target's libraries",
 			"should be installed"
@@ -109,6 +110,13 @@ class HaxeBuild {
 			case "hxml":
 				var hxml = Builder.buildHxml(buildProp);
 				File.saveContent("./hxbuild.hxml", hxml);
+				return;
+
+			case "xml":
+				var xml: Xml = Builder.buildXml(buildProp);
+				// TODO: Prettify output
+				var xmlStr: String = xml.toString();
+				File.saveContent("./hxbuild.xml", xmlStr);
 				return;
 			
 			default:

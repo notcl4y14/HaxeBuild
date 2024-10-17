@@ -1,0 +1,12 @@
+<project>
+	<app path="build/hl" main="Main" file="Main"/>
+	<source path="."/>
+
+	<assets path="assets/images"/>
+	<assets path="assets/sounds"/>
+
+	<haxedef name="Release"/>
+	
+	<haxelib name="hlsdl"/>
+	<haxelib name="haxe-files"/>
+</project>
