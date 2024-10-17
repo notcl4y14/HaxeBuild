@@ -78,39 +78,30 @@ class HaxeBuild {
 
 		var buildProp: BuildProperties
 			= BuildProperties.fromJson(hxbuildJson);
-		
-		// Sys.println(BuildProperties.asString(buildProp));
 
 		// Joining
 		var config = args.get("--config");
 		var target = args.get("--target");
 
-		if (config == null) {
-			Sys.println("ERROR: Config not specified");
-			return;
-		}
-
-		if (target == null) {
-			Sys.println("ERROR: Target not specified");
-			return;
-		}
-
-		if (!buildProp.configs.exists(config)) {
+		if (config != null && !buildProp.configs.exists(config)) {
 			Sys.println("ERROR: No such config as \"" + config + "\"");
 			return;
 		}
 
-		if (!buildProp.targets.exists(target)) {
+		if (target != null && !buildProp.targets.exists(target)) {
 			Sys.println("ERROR: No such target as \"" + target + "\"");
 			return;
 		}
 
-		PropertyJoiner.join(buildProp, buildProp.configs.get(config));
-		PropertyJoiner.join(buildProp, buildProp.targets.get(target));
-
-		// Sys.println(BuildProperties.asString(buildProp));
+		config != null ? PropertyJoiner.join(buildProp, buildProp.configs.get(config)) : null;
+		target != null ? PropertyJoiner.join(buildProp, buildProp.targets.get(target)) : null;
 
 		// Building
+		if (buildProp.target == null) {
+			Sys.println("Haxe target not specified!");
+			return;
+		}
+		
 		if (args.get("-G") == "hxml") {
 			var hxml = Builder.buildHxml(buildProp);
 			File.saveContent("./hxbuild.hxml", hxml);
@@ -144,22 +135,6 @@ class HaxeBuild {
 	}
 
 	static function init(): Void {
-		// var json = {
-		// 	"main": "Main",
-
-		// 	"outFile": "Main",
-		// 	"outDir": "build",
-		
-		// 	"configs:Release": {
-		// 		"defines": ["Release"]
-		// 	},
-		
-		// 	"configs:Debug": {
-		// 		"defines": ["Debug"]
-		// 	}
-		// };
-
-		// var jsonStr = Json.stringify(json, null, "\t");
 		var jsonStr = '{
 	"main": "Main",
 
