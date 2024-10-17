@@ -47,7 +47,7 @@ class HaxeBuild {
 	
 	static function usage(): Void {
 		var usage = [
-			"HaxeBuild v1.0.2",
+			"HaxeBuild v1.1.0",
 			"",
 			"GitHub Repo: \033[34mhttps://github.com/notcl4y14/HaxeBuild\033[0m",
 			"",
@@ -94,8 +94,11 @@ class HaxeBuild {
 			return;
 		}
 
-		config != null ? PropertyJoiner.join(buildProp, buildProp.configs.get(config)) : null;
-		target != null ? PropertyJoiner.join(buildProp, buildProp.targets.get(target)) : null;
+		buildProp.currentConfig = config;
+		buildProp.currentTarget = target;
+
+		config != null ? PropertyJoiner.join(buildProp, BuildProperties.getCurrentConfig(buildProp)) : null;
+		target != null ? PropertyJoiner.join(buildProp, BuildProperties.getCurrentTarget(buildProp)) : null;
 
 		// Building
 		if (buildProp.target == null) {

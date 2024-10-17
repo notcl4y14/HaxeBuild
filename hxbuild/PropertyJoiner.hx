@@ -9,11 +9,9 @@ class PropertyJoiner {
 	// -  1. If it also contains variables like ${outDir} - take from dest and replace the value with it,
 	//       like: "${outDir}/hl" + outDir:"build" -> "build/hl"
 	public static function join(dest: BuildProperties, source: BuildProperties): Void {
-		// var buildProp: Dynamic = cast (dest, Dynamic);
 
 		for (field in Reflect.fields(source)) {
 			var prop = Reflect.getProperty(source, field);
-			// trace(field + ": " + Reflect.getProperty(dest, field));
 
 			if (prop is Array) {
 				var sourceArray: Array<String> = prop;
@@ -25,10 +23,28 @@ class PropertyJoiner {
 				continue;
 			} else {
 				var newProp: String = cast (prop, String);
-				// TODO: make this automatically get any property
-				newProp = StringTools.replace(newProp, "${outDir}", dest.outDir);
+				newProp = replaceStrings(newProp, dest);
 				Reflect.setProperty(dest, field, newProp);
 			}
 		}
+
+	}
+
+	static function replaceStrings(str: String, buildProp: BuildProperties): String {
+		var newStr: String = str;
+
+		// TODO: make this automatically get any property
+		newStr = StringTools.replace(newStr, "${outDir}", buildProp.outDir);
+
+		// if (ignoreColons) {
+		// 	return newStr;
+		// }
+
+		// newStr = StringTools.replace(newStr, "${outDir:config}",
+		// 	replaceStrings(newStr, BuildProperties.getCurrentConfig(buildProp), true));
+		// newStr = StringTools.replace(newStr, "${outDir:target}",
+		// 	replaceStrings(newStr, BuildProperties.getCurrentTarget(buildProp), true));
+		
+		return newStr;
 	}
 }

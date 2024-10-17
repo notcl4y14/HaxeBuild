@@ -1,13 +1,6 @@
 package hxbuild;
 
 class BuildProperties {
-
-	// Removes the "x:" part leaving only "y" part in "x:y"
-	// Example: "config:Release" -> "Release"
-	static var rightRegex: EReg = ~/(?!.+:)((?!:).+)/;
-	static var leftRegex: EReg = ~/(.+(?=:))/;
-	// static var rightRegex: EReg = ~/(?!(.+):)((?!:).*)/;
-	// static var leftRegex: EReg = ~/((.+):)(?!:(.*))/;
 	
 	public var main: String;
 	public var target: String;
@@ -25,24 +18,20 @@ class BuildProperties {
 	public var configs: Map<String, BuildProperties>;
 	public var targets: Map<String, BuildProperties>;
 
+	public var currentConfig: String;
+	public var currentTarget: String;
+
 	public function new() {}
 
-	public static function asString(buildProp: BuildProperties): String {
-		return 'main: ${buildProp.main}
-target: ${buildProp.target}
-classpath: ${buildProp.classpath}
-include: ${buildProp.include}
-outFile: ${buildProp.outFile}
-outDir: ${buildProp.outDir}
-libraries: ${buildProp.libraries}
-defines: ${buildProp.defines}
-configs: ${buildProp.configs} items
-targets: ${buildProp.targets} items';
-// configs: ${Reflect.fields(buildProp.configs).length} items
-// targets: ${Reflect.fields(buildProp.targets).length} items';
+	public static function getCurrentConfig(buildProp: BuildProperties): BuildProperties {
+		return buildProp.configs
+			.get(buildProp.currentConfig);
 	}
 
-	// public static function hasFilter(filter: String, value: String): Bool {}
+	public static function getCurrentTarget(buildProp: BuildProperties): BuildProperties {
+		return buildProp.targets
+			.get(buildProp.currentTarget);
+	}
 
 	public static function fromJson(json: Dynamic, subBuildProp: Bool = true): BuildProperties {
 		var buildProp: BuildProperties
@@ -72,28 +61,15 @@ targets: ${buildProp.targets} items';
 			 = new Map();
 			 
 		for (filter in Reflect.fields(json)) {
-			// var key = Reflect.field(json, filter);
 			var value = Reflect.getProperty(json, filter);
-
-			// trace("----" + filter + "----");
-
-			// var filterKey = leftRegex.split(filter)[0]; // key without the left part with the colon
-			// var filterValue = rightRegex.split(filter)[0];
-
+			
 			var filterKey = getLeftPart(filter);
 			var filterValue = getRightPart(filter);
-
-			// var filterName = filters.filter((a) -> keyName == a)[0];
 
 			// When got anything else but filter
 			if (filterValue == "") {
 				continue;
 			}
-
-			// trace(filterKey);
-			// trace(filterValue);
-
-			// trace(filterKey == filterName);
 
 			// If the given filter does not match the filter
 			// that's being searched
@@ -101,14 +77,8 @@ targets: ${buildProp.targets} items';
 				continue;
 			}
 
-			// trace(filterValue);
-			// trace(value);
-
 			map.set(filterValue, BuildProperties.fromJson(value, false));
 		}
-
-		// if (map.get("C++") != null)
-		// 	trace(BuildProperties.asString(map.get("C++")));
 
 		return map;
 	}

@@ -10,12 +10,14 @@
 
 	"configs:Release": {
 		"defines": ["Release"],
-		"optimize": "On"
+		"optimize": "On",
+		"outDir": "${outDir}/Release"
 	},
 
 	"configs:Debug": {
 		"defines": ["Debug"],
-		"optimize": "Off"
+		"optimize": "Off",
+		"outDir": "${outDir}/Debug"
 	},
 
 	"targets:C++": {
