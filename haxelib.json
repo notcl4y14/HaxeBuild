@@ -9,7 +9,7 @@
 	"description": "Build tool for Haxe",
 	"version": "1.1.0",
 	"classPath": "hxbuild",
-	"releasenote": "Fix Haxelib using different current directory path",
+	"releasenote": "Configs and targets are optional now. Add new \"xml\" build option",
 	"contributors": [
 		"notcl4y14"
 	],
