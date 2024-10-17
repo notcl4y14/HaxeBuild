@@ -101,11 +101,19 @@ class HaxeBuild {
 			Sys.println("Haxe target not specified!");
 			return;
 		}
-		
-		if (args.get("-G") == "hxml") {
-			var hxml = Builder.buildHxml(buildProp);
-			File.saveContent("./hxbuild.hxml", hxml);
-			return;
+
+		switch (args.get("-G")) {
+			case "direct"|null:
+				// Just continue to building
+
+			case "hxml":
+				var hxml = Builder.buildHxml(buildProp);
+				File.saveContent("./hxbuild.hxml", hxml);
+				return;
+			
+			default:
+				Sys.println("ERROR: Unknown build option: \"" + args.get("-G") + "\"");
+				return;
 		}
 
 		Builder.build(buildProp);
